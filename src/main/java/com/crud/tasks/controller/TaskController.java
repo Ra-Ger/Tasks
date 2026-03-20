@@ -21,7 +21,7 @@ public class TaskController {
     }
 
     @DeleteMapping(value = "/{taskId}")
-    public void deleteTask(Long taskId) {
+    public void deleteTask(@PathVariable Long taskId) {
 
     }
 
