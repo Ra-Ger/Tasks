@@ -17,9 +17,11 @@ public class Task {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "title")
     private String title;
 
-    @Column(name = "description")
+    @Column(name = "content")
     private String content;
+
+
 }
