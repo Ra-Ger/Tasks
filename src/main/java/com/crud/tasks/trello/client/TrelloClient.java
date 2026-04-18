@@ -10,8 +10,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -34,12 +36,7 @@ public class TrelloClient {
 
         return Optional.ofNullable(boardsResponse)
                 .map(Arrays::asList)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(board -> board.getName() != null
-                        && board.getName().contains("Kodilla")
-                        && board.getId() != null)
-                .collect(Collectors.toList());
+                .orElse(Collections.emptyList());
     }
 
     private URI createUrl()

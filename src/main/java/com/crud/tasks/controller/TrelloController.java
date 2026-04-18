@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("v1/trello")
@@ -20,7 +21,12 @@ public class TrelloController {
     @GetMapping("boards")
     public void getTrelloBoards() {
 
-        List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoards();
+        List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoards()
+                .stream()
+                .filter(board -> board.getName() != null
+                        && board.getName().contains("Kodilla")
+                        && board.getId() != null)
+                .collect(Collectors.toList());
 
         trelloBoards.forEach(trelloBoardDto -> {
             System.out.println(trelloBoardDto.getId() + " - " + trelloBoardDto.getName());
