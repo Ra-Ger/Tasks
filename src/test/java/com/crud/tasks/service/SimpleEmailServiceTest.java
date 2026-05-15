@@ -3,6 +3,7 @@ package com.crud.tasks.service;
 import com.crud.tasks.domain.Mail;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,11 +33,17 @@ class SimpleEmailServiceTest {
         mailMessage.setTo(mail.getMailTo());
         mailMessage.setSubject(mail.getSubject());
         mailMessage.setText(mail.getMessage());
-
+        ArgumentCaptor<SimpleMailMessage> captor =
+                ArgumentCaptor.forClass(SimpleMailMessage.class);
         //When
         simpleEmailService.send(mail);
 
         //Then
-        verify(javaMailSender, times(1)).send(mailMessage);
+        verify(javaMailSender, times(1)).send(captor.capture());
+        SimpleMailMessage actual = captor.getValue();
+
+        assertEquals(mail.getMailTo(), actual.getTo()[0]);
+        assertEquals(mail.getSubject(), actual.getSubject());
+        assertEquals(mail.getMessage(), actual.getText());
     }
 }
