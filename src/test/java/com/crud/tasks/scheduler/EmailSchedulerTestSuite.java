@@ -40,4 +40,20 @@ class EmailSchedulerTestSuite {
                         mail.getMessage().contains("Currently in database you got: 5 tasks")
         ));
     }
+
+    @Test
+    void shouldSendInformationEmailWithSingularTaskWord() {
+        // Given
+        when(taskRepository.count()).thenReturn(1L);
+        when(adminConfig.getAdminMail()).thenReturn("test@test.com");
+
+        // When
+        emailScheduler.sendInformationEmail();
+
+        // Then
+        verify(simpleEmailService, times(1)).send(argThat(mail ->
+                mail.getMailTo().equals("test@test.com") &&
+                        mail.getMessage().contains("Currently in database you got: 1 task")
+        ));
+    }
 }

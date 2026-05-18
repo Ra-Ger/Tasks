@@ -20,8 +20,6 @@ import com.crud.tasks.mapper.TaskMapper;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 
-
-@SpringJUnitWebConfig
 @WebMvcTest(TaskController.class)
 class TaskControllerTest {
 
@@ -68,12 +66,29 @@ class TaskControllerTest {
     }
 
     @Test
-    void deleteTaskTest() throws Exception {
+    void shouldDeleteTask() throws Exception {
+        // Given
+        Long taskId = 1L;
+
         // When & Then
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/v1/tasks/1")
+                        .delete("/v1/tasks/" + taskId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenDeletingNonExistingTask() throws Exception {
+        // Given
+        Long taskId = 1L;
+        org.mockito.Mockito.doThrow(new com.crud.tasks.exception.TaskNotFoundException())
+                .when(dbService).deleteTask(taskId);
+
+        // When & Then
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/v1/tasks/" + taskId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
